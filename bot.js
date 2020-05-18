@@ -19,20 +19,42 @@ const initGameNotificationsChannel = () => {
 
 client.on("ready", initGameNotificationsChannel);
 
-client.on("presenceUpdate", (_oldPresence, newPresence) => {
+client.on("presenceUpdate", (oldPresence, newPresence) => {
   const isFlorian = newPresence.user.username === config.username.florian;
-  const isPlaying =
-    newPresence.activities.length !== 0 &&
-    newPresence.activities[0].type === "PLAYING";
+  if (!isFlorian) return;
 
-  if (isFlorian && isPlaying) {
+  const hasPlayingActivity = (presence) =>
+    presence.activities.length !== 0 &&
+    presence.activities[0].type === "PLAYING";
+
+  const isPlaying = hasPlayingActivity(newPresence);
+  const wasPlaying = hasPlayingActivity(oldPresence);
+
+  if (isPlaying) {
     const gameTitle = newPresence.activities[0].name;
-    const msg = `Hey <@${config.userId.toni}>, I'm playing **${gameTitle}**. Ping me on discord if you want to join 😊`;
-    gameNotificationsChannel.send(msg);
-    console.log("Msg sent: " + msg);
+    notifyStartedGame(gameTitle);
+  } else if (wasPlaying) {
+    const gameTitle = oldPresence.activities[0].name;
+    notifyStoppedGame(gameTitle);
   }
 });
 
 client.login(secrets.botToken).then(() => {
   console.log("Logged in");
 });
+
+function notifyStartedGame(gameTitle) {
+  sendMessageToToni(
+    `I'm playing **${gameTitle}**. Ping me on discord if you want to join 😊`
+  );
+}
+
+function notifyStoppedGame(gameTitle) {
+  sendMessageToToni(`I stopped playing **${gameTitle}**. Another time 🙂`);
+}
+
+function sendMessageToToni(msg) {
+  const msgWithMention = `Hey <@${config.userId.toni}>, ${msg}`;
+  gameNotificationsChannel.send(msgWithMention);
+  console.log("Msg sent: " + msgWithMention);
+}
