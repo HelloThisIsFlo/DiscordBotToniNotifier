@@ -50,11 +50,12 @@ function notifyStartedGame(gameTitle) {
 }
 
 function notifyStoppedGame(gameTitle) {
-  sendMessageToToni(`I stopped playing **${gameTitle}**. Another time 🙂`);
+  sendMessageToToni(`I stopped playing **${gameTitle}**. Another time 🙂`, false);
 }
 
-function sendMessageToToni(msg) {
-  const msgWithMention = `Hey <@${config.userId.toni}>, ${msg}`;
+function sendMessageToToni(msg, notify=true) {
+  const toniTag = notify ? `<@${config.userId.toni}>` : `toni`
+  const msgWithMention = `Hey ${toniTag}, ${msg}`;
   gameNotificationsChannel.send(msgWithMention);
   console.log("Msg sent: " + msgWithMention);
 }
