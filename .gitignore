@@ -1,3 +1,4 @@
+secrets.json
 
 # Created by https://www.gitignore.io/api/node
 # Edit at https://www.gitignore.io/?templates=node
@@ -109,4 +110,3 @@ tmp/
 temp/
 
 # End of https://www.gitignore.io/api/node
-
