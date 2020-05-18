@@ -33,4 +33,6 @@ client.on("presenceUpdate", (_oldPresence, newPresence) => {
   }
 });
 
-client.login(secrets.botToken);
+client.login(secrets.botToken).then(() => {
+  console.log("Logged in");
+});
