@@ -30,7 +30,7 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
   const isPlaying = hasPlayingActivity(newPresence);
   const wasPlaying = hasPlayingActivity(oldPresence);
 
-  if (isPlaying) {
+  if (isPlaying & !wasPlaying) {
     const gameTitle = newPresence.activities[0].name;
     notifyStartedGame(gameTitle);
   } else if (wasPlaying) {
